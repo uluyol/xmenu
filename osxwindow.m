@@ -11,7 +11,7 @@
 
 #import <stdio.h>
 #import <Cocoa/Cocoa.h>
-#import "draw.h"
+#import "view.h"
 #import "items.h"
 
 int main(int argc, const char * argv[])

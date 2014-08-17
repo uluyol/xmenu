@@ -1,4 +1,4 @@
-#import <AppKit/NSView.h>
+#import <CoreGraphics/CoreGraphics.h>
 
 typedef struct {
 	CGColorRef nbg;
@@ -11,9 +11,6 @@ typedef struct {
 	CGFloat h;
 	CGFloat w;
 } DrawCtx;
-
-@interface XmenuMainView : NSView
-@end
 
 bool drawText(CGContextRef ctx, DrawCtx *drawCtx, CFStringRef itemName);
 CGColorRef mkColor(char *hex_color);

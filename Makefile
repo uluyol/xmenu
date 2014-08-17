@@ -1,6 +1,6 @@
 CC = clang
 CFLAGS ?= -Wall
-OBJS = osxwindow.o items.o draw.o
+OBJS = osxwindow.o items.o view.o draw.o
 
 
 .PHONY: all clean
