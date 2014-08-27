@@ -1,6 +1,7 @@
 #import <stdio.h>
 #import <stdlib.h>
 #import "items.h"
+#import "util.h"
 
 Item *
 newItem(ItemList *list)
@@ -32,7 +33,9 @@ ReadStdin(void)
 		if (item == NULL)
 			goto end;
 		item->out = false;
-		item->text = CFStringCreateWithCString(NULL, buf, kCFStringEncodingUTF8);
+		char *padded = pad(buf);
+		item->text = CFStringCreateWithCString(NULL, padded, kCFStringEncodingUTF8);
+		free(padded);
 	}
 end:
 	free(buf);
