@@ -1,7 +1,8 @@
 #import <stdbool.h>
+#import <ApplicationServices/ApplicationServices.h>
 
 typedef struct {
-	char *text;
+	CFStringRef text;
 	bool out;
 } Item;
 
@@ -11,4 +12,4 @@ typedef struct {
 	size_t cap;
 } ItemList;
 
-ItemList *ReadStdin(void);
+ItemList ReadStdin(void);

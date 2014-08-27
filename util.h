@@ -1,0 +1,1 @@
+char *pad(char *s);

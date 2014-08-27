@@ -1,10 +1,20 @@
 #import <ApplicationServices/ApplicationServices.h>
 #import "draw.h"
 
+#define INPUT_SPACE_FRACTION 0.3
+
 bool
-drawText(CGContextRef ctx, DrawCtx *drawCtx, CFStringRef itemName)
+drawText(CGContextRef ctx, DrawCtx *drawCtx, CFStringRef itemName, bool sel)
 {
-	CFAttributedStringRef attrItemName = mkAttrString(drawCtx, itemName);
+	CGColorRef fg, bg;
+	if (sel) {
+		fg = drawCtx->sfg;
+		bg = drawCtx->sbg;
+	} else {
+		fg = drawCtx->nfg;
+		bg = drawCtx->nbg;
+	}
+	CFAttributedStringRef attrItemName = mkAttrString(drawCtx, itemName, fg);
 	CTLineRef line = CTLineCreateWithAttributedString(attrItemName);
 	CGRect lineRect = CTLineGetImageBounds(line, ctx);
 	CGFloat h = CGRectGetHeight(lineRect);
@@ -12,7 +22,7 @@ drawText(CGContextRef ctx, DrawCtx *drawCtx, CFStringRef itemName)
 	CGFloat y = (drawCtx->h + drawCtx->font_siz) / 2 - h;
 	if ((drawCtx->x + w) > drawCtx->w)
 		return false;
-	CGContextSetFillColorWithColor(ctx, drawCtx->sbg);
+	CGContextSetFillColorWithColor(ctx, bg);
 	CGContextFillRect(ctx, CGRectMake (drawCtx->x, 0, w, drawCtx->h));
 	CGContextSetTextPosition(ctx, drawCtx->x, y);
 	CTLineDraw(line, ctx);
@@ -22,10 +32,17 @@ drawText(CGContextRef ctx, DrawCtx *drawCtx, CFStringRef itemName)
 	return true;
 }
 
+/* TODO: Actually draw. */
+void
+drawInput(CGContextRef ctx, DrawCtx *drawCtx) {
+	CGFloat w = drawCtx->w * INPUT_SPACE_FRACTION;
+	drawCtx->x += w;
+}
+
 CFAttributedStringRef
-mkAttrString(DrawCtx *drawCtx, CFStringRef str) {
+mkAttrString(DrawCtx *drawCtx, CFStringRef str, CGColorRef color) {
 	CFStringRef keys[] = { kCTFontAttributeName, kCTForegroundColorAttributeName };
-	CFTypeRef values[] = { drawCtx->font, drawCtx->sfg };
+	CFTypeRef values[] = { drawCtx->font, color };
 	CFDictionaryRef attrs = CFDictionaryCreate(
 		kCFAllocatorDefault,
 		(const void **)&keys,

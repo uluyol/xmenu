@@ -10,8 +10,10 @@ typedef struct {
 	CGFloat x;
 	CGFloat h;
 	CGFloat w;
+	bool sel;
 } DrawCtx;
 
-bool drawText(CGContextRef ctx, DrawCtx *drawCtx, CFStringRef itemName);
+bool drawText(CGContextRef ctx, DrawCtx *drawCtx, CFStringRef itemName, bool sel);
+void drawInput(CGContextRef ctx, DrawCtx *drawCtx);
 CGColorRef mkColor(char *hex_color);
-CFAttributedStringRef mkAttrString(DrawCtx *drawCtx, CFStringRef str);
+CFAttributedStringRef mkAttrString(DrawCtx *drawCtx, CFStringRef str, CGColorRef color);

@@ -1,14 +1,22 @@
 #import <Cocoa/Cocoa.h>
 #import "draw.h"
+#import "util.h"
 #import "view.h"
 #include <string.h>
 
-#define prompt_s "$"
+#define promptCStr "$"
 
 @implementation XmenuMainView
 - (id)initWithFrame:(NSRect)frame
 {
 	self = [super initWithFrame: frame];
+	return self;
+}
+
+- (id)initWithFrameAndItems:(NSRect)frame Items:(ItemList)itemList
+{
+	self = [super initWithFrame: frame];
+	[self setItemList:itemList];
 	return self;
 }
 
@@ -25,14 +33,18 @@
 	NSRectFill(rect);
 	CGContextRef ctx = [[NSGraphicsContext currentContext] graphicsPort];
 
-	CFStringRef itemName = CFStringCreateWithCString(NULL, " Test String ", kCFStringEncodingUTF8);
+	CFStringRef itemName = CFStringCreateWithCString(NULL, pad("Test String"), kCFStringEncodingUTF8);
 	CFStringRef psFont = CFStringCreateWithCString(NULL, "Consolas", kCFStringEncodingUTF8);
+	CFStringRef promptStr = CFStringCreateWithCString(NULL, pad(promptCStr), kCFStringEncodingUTF8);
 	CTFontDescriptorRef fontDesc = CTFontDescriptorCreateWithNameAndSize(psFont, drawCtx.font_siz);
 	CTFontRef font = CTFontCreateWithFontDescriptor(fontDesc, 0.0, NULL);
 	drawCtx.font = font;
 	drawCtx.h = rect.size.height;
 	drawCtx.w = rect.size.width;
-	while (drawText(ctx, &drawCtx, itemName));
+	drawText(ctx, &drawCtx, promptStr, true);
+	drawInput(ctx, &drawCtx);
+	drawText(ctx, &drawCtx, itemName, true);
+	while (drawText(ctx, &drawCtx, itemName, false));
 //	CFRelease(itemName);
 //	CFRelease(attrs);
 }

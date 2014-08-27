@@ -2,12 +2,6 @@
 #import <stdlib.h>
 #import "items.h"
 
-ItemList *
-newItemList(void)
-{
-	return calloc(1, sizeof(ItemList));
-}
-
 Item *
 newItem(ItemList *list)
 {
@@ -24,23 +18,24 @@ newItem(ItemList *list)
 	return item;
 }
 
-ItemList *
+ItemList
 ReadStdin(void)
 {
-	ItemList *list = newItemList();
+	ItemList list;
 	char *buf = NULL;
 	size_t cap = 0;
 	size_t len;
 	while ((len = getline(&buf, &cap, stdin)) != -1) {
 		if (len && buf[len-1] == '\n')
 			buf[len-1] = '\0';
-		Item *item = newItem(list);
+		Item *item = newItem(&list);
 		if (item == NULL)
-			return list;
+			goto end;
 		item->out = false;
-		item->text = buf;
-		buf = NULL;
+		item->text = CFStringCreateWithCString(NULL, buf, kCFStringEncodingUTF8);
 	}
+end:
+	free(buf);
 	return list;
 }
 

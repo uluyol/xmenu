@@ -1,7 +1,6 @@
 CC = clang
 CFLAGS ?= -Wall
-OBJS = main.o items.o view.o draw.o
-
+OBJS = draw.o items.o main.o util.o view.o
 
 .PHONY: all clean
 
