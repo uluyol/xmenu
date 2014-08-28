@@ -13,7 +13,7 @@
 	return self;
 }
 
-- (id)initWithFrameAndItems:(NSRect)frame Items:(ItemList)itemList
+- (id)initWithFrame:(NSRect)frame items:(ItemList)itemList
 {
 	self = [super initWithFrame: frame];
 	self.itemList = itemList;

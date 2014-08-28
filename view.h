@@ -5,6 +5,6 @@
 
 @property ItemList itemList;
 
-- (id)initWithFrameAndItems:(NSRect)frame Items:(ItemList)itemList;
+- (id)initWithFrame:(NSRect)frame items:(ItemList)itemList;
 
 @end

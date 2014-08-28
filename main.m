@@ -50,9 +50,8 @@ int main(int argc, const char * argv[])
 	// so we can write a test string on it.
 //	NSTextView * textView = [[NSTextView alloc] initWithFrame:windowRect];
 //	[textView autorelease];
-	XmenuMainView *mainView = [[XmenuMainView alloc]
-		initWithFrameAndItems:windowRect
-		Items:itemList];
+	XmenuMainView *mainView = [[XmenuMainView alloc] initWithFrame:windowRect
+							 items:itemList];
 	[mainView autorelease];
 	[window setContentView:mainView];
 //	for (int i = 0; i < itemList->len; i++) {
