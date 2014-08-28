@@ -32,7 +32,11 @@ int main(int argc, const char * argv[])
 
 	NSRect screenFrame = [[NSScreen mainScreen] frame];
 	// Window bounds (x, y, width, height)
-	NSRect windowRect = NSMakeRect(0, 0, screenFrame.size.width , 50);
+	NSRect windowRect = NSMakeRect(
+		screenFrame.origin.x,
+		screenFrame.origin.y,
+		screenFrame.size.width,
+		50);
 
 	NSWindow *window = [[NSWindow alloc]
 		initWithContentRect:windowRect
