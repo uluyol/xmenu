@@ -58,7 +58,6 @@ mkColor(char *hex_color)
 		return NULL;
 	hex_color++;
 	CGFloat rgba[4];
-	rgba[3] = 1.0;
 	int t;
 	switch (strlen(hex_color)) {
 	case 3:
@@ -81,5 +80,6 @@ mkColor(char *hex_color)
 	rgba[0] /= 255.0;
 	rgba[1] /= 255.0;
 	rgba[2] /= 255.0;
+	rgba[3] = 1.0;
 	return CGColorCreate(CGColorSpaceCreateDeviceRGB(), rgba);
 }
