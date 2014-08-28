@@ -8,11 +8,11 @@ all: xmenu
 
 xmenu: $(OBJS)
 	@echo " CC " xmenu
-	@$(CC) -o xmenu $(OBJS) -framework Cocoa
+	@$(CC) $(CFLAGS) -o xmenu $(OBJS) -framework Cocoa
 
 .c.o .m.o:
 	@echo " CC " $<
-	@$(CC) -c $<
+	@$(CC) $(CFLAGS) -c $<
 
 clean:
 	rm -f $(OBJS) xmenu
