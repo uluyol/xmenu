@@ -53,7 +53,7 @@ int main(int argc, const char * argv[])
 	XmenuMainView *mainView = [[XmenuMainView alloc] initWithFrame:windowRect
 							 items:itemList];
 	[mainView autorelease];
-	[window setContentView:mainView];
+	window.contentView = mainView;
 //	for (int i = 0; i < itemList->len; i++) {
 //		[textView insertText: [NSString stringWithUTF8String: itemList->items[i].text]];
 //	}

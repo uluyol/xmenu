@@ -31,7 +31,6 @@
 	drawCtx.font_siz = 14.0; // TODO: Fix shadows
 	[[NSColor colorWithCGColor: drawCtx.nbg] set];
 	NSRectFill(rect);
-	CGContextRef ctx = [[NSGraphicsContext currentContext] graphicsPort];
 
 	CFStringRef promptStr = CFStringCreateWithCString(NULL, pad(promptCStr), kCFStringEncodingUTF8);
 	CFStringRef psFont = CFStringCreateWithCString(NULL, "Consolas", kCFStringEncodingUTF8);
@@ -41,6 +40,9 @@
 	drawCtx.font = font;
 	drawCtx.h = rect.size.height;
 	drawCtx.w = rect.size.width;
+
+	CGContextRef ctx = [[NSGraphicsContext currentContext] graphicsPort];
+
 	drawText(ctx, &drawCtx, promptStr, true);
 	drawInput(ctx, &drawCtx);
 	ItemList list = self.itemList;
