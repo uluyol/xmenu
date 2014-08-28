@@ -10,11 +10,11 @@ newItem(ItemList *list)
 	/* We never free anything so pos should never loop. */
 	if (list->len == list->cap) {
 		list->cap += sizeof(Item) * BUFSIZ;
-		if (!(list->items = realloc(list->items, list->cap))) {
+		if (!(list->item = realloc(list->item, list->cap))) {
 			return NULL;
 		}
 	}
-	item = list->items + list->len;
+	item = list->item + list->len;
 	(list->len)++;
 	return item;
 }
@@ -32,7 +32,7 @@ ReadStdin(void)
 		Item *item = newItem(&list);
 		if (item == NULL)
 			goto end;
-		item->out = false;
+		item->sel = false;
 		char *padded = pad(buf);
 		item->text = CFStringCreateWithCString(NULL, padded, kCFStringEncodingUTF8);
 		free(padded);

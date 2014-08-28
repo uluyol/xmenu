@@ -11,6 +11,9 @@
 int main(int argc, const char * argv[])
 {
 	ItemList itemList = ReadStdin();
+	if (itemList.len)
+		itemList.item[0].sel = true;
+
 
 	// Autorelease Pool:
 	// Objects declared in this scope will be automatically

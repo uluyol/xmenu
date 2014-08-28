@@ -47,8 +47,8 @@
 	drawInput(ctx, &drawCtx);
 	ItemList list = self.itemList;
 	for (int i = 0; i < list.len; i++) {
-		Item *itemp = list.items+i;
-		if (!drawText(ctx, &drawCtx, itemp->text, itemp->out))
+		Item *itemp = list.item+i;
+		if (!drawText(ctx, &drawCtx, itemp->text, itemp->sel))
 			break;
 	}
 }

@@ -3,11 +3,11 @@
 
 typedef struct {
 	CFStringRef text;
-	bool out;
+	bool sel;
 } Item;
 
 typedef struct {
-	Item *items;
+	Item *item;
 	size_t len;
 	size_t cap;
 } ItemList;
