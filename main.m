@@ -30,22 +30,16 @@ int main(int argc, const char * argv[])
 
 	// Create a window:
 
-	// Style flags
-	NSUInteger windowStyle =
-			(NSTitledWindowMask  |
-			 NSClosableWindowMask |
-			 NSResizableWindowMask);
-
+	NSRect screenFrame = [[NSScreen mainScreen] frame];
 	// Window bounds (x, y, width, height)
-	NSRect windowRect = NSMakeRect(0, 0, 800, 50);
+	NSRect windowRect = NSMakeRect(0, 0, screenFrame.size.width , 50);
 
 	NSWindow *window = [[NSWindow alloc]
 		initWithContentRect:windowRect
-		styleMask:windowStyle
+		styleMask:NSBorderlessWindowMask
 		backing:NSBackingStoreBuffered
 		defer:NO];
 	[window autorelease];
-	[window setStyleMask:NSBorderlessWindowMask];
 	[window makeKeyAndOrderFront:nil];
 	// Window controller
 //	NSWindowController * windowController =
