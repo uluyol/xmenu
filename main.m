@@ -1,18 +1,12 @@
-/*
- * File: OSXWindow.m
- *
- * Brief:
- * Creates a OSX/Cocoa application and window
- * without interface builder and XCode.
- *
- * Compile with:
- * gcc OSXWindow.m -o OSXWindow -framework Cocoa
- */
-
+#import <stdbool.h>
 #import <stdio.h>
 #import <Cocoa/Cocoa.h>
 #import "view.h"
 #import "items.h"
+
+// TODO: Parse these from command-line opts.
+#define window_height 50
+#define display_bottom true
 
 int main(int argc, const char * argv[])
 {
@@ -30,13 +24,17 @@ int main(int argc, const char * argv[])
 
 	// Create a window:
 
-	NSRect screenFrame = [[NSScreen mainScreen] frame];
+	NSRect screenFrame = [[NSScreen mainScreen] visibleFrame];
+	CGFloat y = screenFrame.origin.y;
+	if (!display_bottom) {
+		y += screenFrame.size.height - window_height;
+	}
 	// Window bounds (x, y, width, height)
 	NSRect windowRect = NSMakeRect(
 		screenFrame.origin.x,
-		screenFrame.origin.y,
+		y,
 		screenFrame.size.width,
-		50);
+		window_height);
 
 	NSWindow *window = [[NSWindow alloc]
 		initWithContentRect:windowRect
@@ -67,7 +65,6 @@ int main(int argc, const char * argv[])
 	// TODO: Create menus (especially Quit!)
 
 	// Show window and run event loop
-	[window cascadeTopLeftFromPoint:NSMakePoint(20,20)];
 	[window orderFrontRegardless];
 	[NSApp activateIgnoringOtherApps:YES];
 	[NSApp run];
