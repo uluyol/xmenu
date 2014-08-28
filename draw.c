@@ -16,14 +16,12 @@ drawText(CGContextRef ctx, DrawCtx *drawCtx, CFStringRef itemName, bool sel)
 	}
 	CFAttributedStringRef attrItemName = mkAttrString(drawCtx, itemName, fg);
 	CTLineRef line = CTLineCreateWithAttributedString(attrItemName);
-	CGRect lineRect = CTLineGetImageBounds(line, ctx);
-	CGFloat h = CGRectGetHeight(lineRect);
 	CGFloat w = CTLineGetTypographicBounds(line, NULL, NULL, NULL);
-	CGFloat y = (drawCtx->h + drawCtx->font_siz) / 2 - h;
 	if ((drawCtx->x + w) > drawCtx->w)
 		return false;
 	CGContextSetFillColorWithColor(ctx, bg);
 	CGContextFillRect(ctx, CGRectMake (drawCtx->x, 0, w, drawCtx->h));
+	CGFloat y = (drawCtx->h - drawCtx->font_siz) / 2;
 	CGContextSetTextPosition(ctx, drawCtx->x, y);
 	CTLineDraw(line, ctx);
 	drawCtx->x += w;
