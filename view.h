@@ -6,5 +6,10 @@
 @property ItemList itemList;
 
 - (id)initWithFrame:(NSRect)frame items:(ItemList)itemList;
+- (void)keyUp:(NSEvent*)event;
+- (void)keyDown:(NSEvent*)event;
 
+@end
+
+@interface BorderlessWindow : NSWindow {}
 @end

@@ -7,6 +7,9 @@
 #define promptCStr "$"
 
 @implementation XmenuMainView
+
+- (BOOL)acceptsFirstResponder { return YES; }
+
 - (id)initWithFrame:(NSRect)frame
 {
 	self = [super initWithFrame: frame];
@@ -18,6 +21,26 @@
 	self = [super initWithFrame: frame];
 	self.itemList = itemList;
 	return self;
+}
+
+- (void)keyUp:(NSEvent*)event
+{
+	NSLog(@"Key released: %@", event);
+}
+
+- (void)keyDown:(NSEvent*)event
+{
+	switch ([event keyCode]) {
+	case 126:
+	case 125:
+	case 124:
+	case 123:
+		NSLog(@"Arrow key pressed!");
+		break;
+	default:
+		NSLog(@"Key pressed: %@", event);
+		break;
+	}
 }
 
 - (void)drawRect:(NSRect)rect
@@ -48,9 +71,17 @@
 	ItemList list = self.itemList;
 	for (int i = 0; i < list.len; i++) {
 		Item *itemp = list.item+i;
-		if (!drawText(ctx, &drawCtx, itemp->text, itemp->sel))
+		if (!drawText(ctx, &drawCtx, itemp->text, itemp->sel)) {
 			break;
+		}
 	}
 }
+
+@end
+
+@implementation BorderlessWindow
+
+- (BOOL)canBecomeKeyWindow  { return YES; }
+- (BOOL)canBecomeMainWindow { return YES; }
 
 @end
