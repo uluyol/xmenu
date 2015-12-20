@@ -2,6 +2,7 @@
 
 #include <stdbool.h>
 #include <stdio.h>
+#include "draw.h"
 #include "view.h"
 #include "items.h"
 
@@ -12,6 +13,8 @@
 char *toReturn = "";
 
 int main(int argc, const char **argv) {
+  initDraw();
+
   ItemList itemList = ReadStdin();
   if (itemList.len) {
     itemList.item[0].sel = true;

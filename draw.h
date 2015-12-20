@@ -16,9 +16,11 @@ typedef struct {
   bool sel;
 } DrawCtx;
 
+void initDraw();
+
 bool drawText(CGContextRef ctx, DrawCtx *drawCtx, CFStringRef itemName,
               bool sel);
-void drawInput(CGContextRef ctx, DrawCtx *drawCtx);
+void drawInput(CGContextRef ctx, DrawCtx *drawCtx, CFStringRef input);
 CGColorRef mkColor(char *hex_color);
 CFAttributedStringRef mkAttrString(DrawCtx *drawCtx, CFStringRef str,
                                    CGColorRef color);

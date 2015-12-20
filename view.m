@@ -119,8 +119,7 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
   CGContextRef ctx = [[NSGraphicsContext currentContext] graphicsPort];
 
   drawText(ctx, &drawCtx, promptStr, true);
-  drawText(ctx, &drawCtx, self.curText, false);
-  drawInput(ctx, &drawCtx);
+  drawInput(ctx, &drawCtx, self.curText);
   ItemList list = self.itemList;
   for (int i = 0; i < list.len; i++) {
     Item *itemp = list.item + i;
