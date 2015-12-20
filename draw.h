@@ -1,4 +1,7 @@
-#import <CoreGraphics/CoreGraphics.h>
+#pragma once
+
+#include <CoreGraphics/CoreGraphics.h>
+#include <stdbool.h>
 
 typedef struct {
 	CGColorRef nbg;

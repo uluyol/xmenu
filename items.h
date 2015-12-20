@@ -1,5 +1,7 @@
-#import <stdbool.h>
-#import <ApplicationServices/ApplicationServices.h>
+#pragma once
+
+#include <ApplicationServices/ApplicationServices.h>
+#include <stdbool.h>
 
 typedef struct {
 	CFStringRef text;

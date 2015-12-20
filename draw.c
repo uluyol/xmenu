@@ -1,5 +1,5 @@
-#import <ApplicationServices/ApplicationServices.h>
-#import "draw.h"
+#include <ApplicationServices/ApplicationServices.h>
+#include "draw.h"
 
 #define INPUT_SPACE_FRACTION 0.3
 
@@ -17,8 +17,9 @@ drawText(CGContextRef ctx, DrawCtx *drawCtx, CFStringRef itemName, bool sel)
 	CFAttributedStringRef attrItemName = mkAttrString(drawCtx, itemName, fg);
 	CTLineRef line = CTLineCreateWithAttributedString(attrItemName);
 	CGFloat w = CTLineGetTypographicBounds(line, NULL, NULL, NULL);
-	if ((drawCtx->x + w) > drawCtx->w)
+	if ((drawCtx->x + w) > drawCtx->w) {
 		return false;
+	}
 	CGContextSetFillColorWithColor(ctx, bg);
 	CGContextFillRect(ctx, CGRectMake (drawCtx->x, 0, w, drawCtx->h));
 	CGFloat y = (drawCtx->h - drawCtx->font_siz) / 2;

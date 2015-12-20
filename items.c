@@ -1,7 +1,7 @@
-#import <stdio.h>
-#import <stdlib.h>
-#import "items.h"
-#import "util.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include "items.h"
+#include "util.h"
 
 Item *
 newItem(ItemList *list)

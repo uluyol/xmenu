@@ -1,12 +1,15 @@
-#import <stdbool.h>
-#import <stdio.h>
-#import <Cocoa/Cocoa.h>
-#import "view.h"
-#import "items.h"
+@import Cocoa;
+
+#include <stdbool.h>
+#include <stdio.h>
+#include "view.h"
+#include "items.h"
 
 // TODO: Parse these from command-line opts.
 #define window_height 50
 #define display_bottom true
+
+char *toReturn = "";
 
 int main(int argc, const char **argv)
 {
@@ -44,7 +47,9 @@ int main(int argc, const char **argv)
 	[view setWantsLayer: YES];
 	[window setContentView: view];
 	[window makeFirstResponder: view];
-
 	[NSApp run];
 	[view release];
+	puts(toReturn);
+
+	return 0;
 }
