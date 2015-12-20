@@ -15,3 +15,4 @@ typedef struct {
 } ItemList;
 
 ItemList ReadStdin(void);
+void ItemListFilter(ItemList *dest, ItemList *src, CFStringRef substr);

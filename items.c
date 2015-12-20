@@ -16,7 +16,18 @@ Item *newItem(ItemList *list) {
   return item;
 }
 
-ItemList *ItemListFilter(ItemList *list) {}
+void ItemListFilter(ItemList *dest, ItemList *src, CFStringRef substr) {
+  for (int i = 0; i < src->len; i++) {
+    Item *cur = src->item + i;
+    CFRange r =
+        CFStringFind(cur->text, substr, kCFCompareCaseInsensitive |
+                                            kCFCompareDiacriticInsensitive);
+    if (r.location == kCFNotFound || r.length == 0) {
+      continue;
+    }
+    newItem(dest)->text = cur->text;
+  }
+}
 
 ItemList ReadStdin(void) {
   ItemList list;
