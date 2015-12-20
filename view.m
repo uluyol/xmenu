@@ -30,6 +30,7 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
 @implementation XmenuMainView {
   ItemList items_;
   ItemList filtered_;
+  Item *selected_;
   CFMutableStringRef curText_;
   PrevStack *ps_;
 }
@@ -46,6 +47,8 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
 
 - (id)initWithFrame:(NSRect)frame items:(ItemList)itemList {
   self = [super initWithFrame:frame];
+  itemList.item[0].sel = TRUE;
+  selected_ = itemList.item;
   items_ = itemList;
   ItemListFrom(&(filtered_), itemList);
   curText_ = CFStringCreateMutable(kCFAllocatorDefault, 0);
@@ -65,6 +68,12 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
         ps_ = PrevStackPop(ps_);
         ItemListReset(&filtered_);
         ItemListFilter(&filtered_, items_, curText_);
+        if (filtered_.len != 0) {
+          filtered_.item[0].sel = TRUE;
+          selected_ = filtered_.item;
+        } else {
+          selected_ = NULL;
+        }
         self.needsDisplay = YES;
       }
       break;
@@ -91,6 +100,12 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
       CFStringAppend(curText_, (CFStringRef)event.characters);
       ItemListReset(&filtered_);
       ItemListFilter(&filtered_, items_, curText_);
+      if (filtered_.len != 0) {
+        filtered_.item[0].sel = TRUE;
+        selected_ = filtered_.item;
+      } else {
+        selected_ = NULL;
+      }
       self.needsDisplay = YES;
       break;
   }
