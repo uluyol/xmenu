@@ -17,6 +17,5 @@ typedef struct _PrevStack {
 
 @end
 
-@interface BorderlessWindow : NSWindow {
-}
+@interface BorderlessWindow : NSWindow
 @end
