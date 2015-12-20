@@ -11,10 +11,6 @@ typedef struct _PrevStack {
 
 @interface XmenuMainView : NSView
 
-@property ItemList itemList;
-@property CFMutableStringRef curText;
-@property PrevStack *ps;
-
 - (id)initWithFrame:(NSRect)frame items:(ItemList)itemList;
 - (void)keyUp:(NSEvent *)event;
 - (void)keyDown:(NSEvent *)event;

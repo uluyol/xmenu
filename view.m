@@ -27,7 +27,12 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
   return ns;
 }
 
-@implementation XmenuMainView
+@implementation XmenuMainView {
+  ItemList items_;
+  ItemList filtered_;
+  CFMutableStringRef curText_;
+  PrevStack *ps_;
+}
 
 - (BOOL)acceptsFirstResponder {
   return YES;
@@ -35,14 +40,15 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
 
 - (id)initWithFrame:(NSRect)frame {
   self = [super initWithFrame:frame];
-  self.curText = CFStringCreateMutable(kCFAllocatorDefault, 0);
+  curText_ = CFStringCreateMutable(kCFAllocatorDefault, 0);
   return self;
 }
 
 - (id)initWithFrame:(NSRect)frame items:(ItemList)itemList {
   self = [super initWithFrame:frame];
-  self.itemList = itemList;
-  self.curText = CFStringCreateMutable(kCFAllocatorDefault, 0);
+  items_ = itemList;
+  ItemListFrom(&(filtered_), itemList);
+  curText_ = CFStringCreateMutable(kCFAllocatorDefault, 0);
   return self;
 }
 
@@ -54,17 +60,18 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
   NSString *curString;
   switch ([event keyCode]) {
     case 51:  // backspace
-      if (self.ps) {
+      if (ps_ != NULL) {
         CFStringDelete(
-            self.curText,
-            CFRangeMake(self.ps->idx,
-                        CFStringGetLength(self.curText) - self.ps->idx));
-        self.ps = PrevStackPop(self.ps);
+            curText_,
+            CFRangeMake(ps_->idx, CFStringGetLength(curText_) - ps_->idx));
+        ps_ = PrevStackPop(ps_);
+        ItemListReset(&filtered_);
+        ItemListFilter(&filtered_, items_, curText_);
         self.needsDisplay = YES;
       }
       break;
     case 53:  // escape
-      curString = (NSString *)self.curText;
+      curString = (NSString *)curText_;
       NSUInteger bufsiz =
           [curString maximumLengthOfBytesUsingEncoding:NSUTF8StringEncoding] +
           1;
@@ -86,8 +93,10 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
       break;
     default:
       NSLog(@"Key pressed: %@", event);
-      self.ps = PrevStackPush(self.ps, CFStringGetLength(self.curText));
-      CFStringAppend(self.curText, (CFStringRef)event.characters);
+      ps_ = PrevStackPush(ps_, CFStringGetLength(curText_));
+      CFStringAppend(curText_, (CFStringRef)event.characters);
+      ItemListReset(&filtered_);
+      ItemListFilter(&filtered_, items_, curText_);
       self.needsDisplay = YES;
       break;
   }
@@ -119,11 +128,12 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
   CGContextRef ctx = [[NSGraphicsContext currentContext] graphicsPort];
 
   drawText(ctx, &drawCtx, promptStr, true);
-  drawInput(ctx, &drawCtx, self.curText);
-  ItemList list = self.itemList;
-  for (int i = 0; i < list.len; i++) {
-    Item *itemp = list.item + i;
-    if (!drawText(ctx, &drawCtx, itemp->text, itemp->sel)) {
+  drawInput(ctx, &drawCtx, curText_);
+  // TODO: Fix drawing so that the currently selected item is always
+  //       visible.
+  for (int i = 0; i < filtered_.len; i++) {
+    Item *ip = filtered_.item + i;
+    if (!drawText(ctx, &drawCtx, ip->text, ip->sel)) {
       break;
     }
   }

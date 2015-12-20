@@ -18,20 +18,30 @@ Item *newItem(ItemList *list) {
   return item;
 }
 
-void ItemListFilter(ItemList *dest, ItemList *src, CFStringRef substr) {
-  for (int i = 0; i < src->len; i++) {
-    Item *cur = src->item + i;
-    CFRange r =
-        CFStringFind(cur->text, substr, kCFCompareCaseInsensitive |
-                                            kCFCompareDiacriticInsensitive);
-    if (r.location == kCFNotFound || r.length == 0) {
-      continue;
+void ItemListFilter(ItemList *dest, ItemList src, CFStringRef substr) {
+  bool alwaysAdd = CFStringGetLength(substr) == 0;
+  for (int i = 0; i < src.len; i++) {
+    Item *cur = src.item + i;
+    if (!alwaysAdd) {
+      CFRange r =
+          CFStringFind(cur->text, substr, kCFCompareCaseInsensitive |
+                                              kCFCompareDiacriticInsensitive);
+      if (r.location == kCFNotFound || r.length == 0) {
+        continue;
+      }
     }
     newItem(dest)->text = cur->text;
   }
 }
 
 void ItemListReset(ItemList *l) { l->len = 0; }
+
+void ItemListFrom(ItemList *dest, ItemList src) {
+  dest->cap = src.len;
+  dest->len = src.len;
+  dest->item = ecalloc(sizeof(Item), src.len);
+  memcpy(dest->item, src.item, sizeof(Item) * src.len);
+}
 
 ItemList ReadStdin(void) {
   ItemList list;

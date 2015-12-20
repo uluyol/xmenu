@@ -15,5 +15,6 @@ typedef struct {
 } ItemList;
 
 ItemList ReadStdin(void);
-void ItemListFilter(ItemList *dest, ItemList *src, CFStringRef substr);
+void ItemListFilter(ItemList *dest, ItemList src, CFStringRef substr);
 void ItemListReset(ItemList *l);
+void ItemListFrom(ItemList *dest, ItemList src);
