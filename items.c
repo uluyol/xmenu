@@ -25,7 +25,9 @@ ItemList ReadStdin(void) {
   while ((len = getline(&buf, &cap, stdin)) != -1) {
     if (len && buf[len - 1] == '\n') buf[len - 1] = '\0';
     Item *item = newItem(&list);
-    if (item == NULL) goto end;
+    if (item == NULL) {
+      goto end;
+    }
     item->sel = false;
     char *padded = pad(buf);
     item->text = CFStringCreateWithCString(NULL, padded, kCFStringEncodingUTF8);
