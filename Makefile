@@ -17,3 +17,6 @@ xmenu: $(OBJS)
 
 clean:
 	rm -f $(OBJS) xmenu
+
+fmt:
+	clang-format -style=google -i *.c *.h *.m

@@ -11,45 +11,40 @@
 
 char *toReturn = "";
 
-int main(int argc, const char **argv)
-{
-	ItemList itemList = ReadStdin();
-	if (itemList.len) {
-		itemList.item[0].sel = true;
-	}
+int main(int argc, const char **argv) {
+  ItemList itemList = ReadStdin();
+  if (itemList.len) {
+    itemList.item[0].sel = true;
+  }
 
-	[NSAutoreleasePool new];
-	[NSApplication sharedApplication];
-	[NSApp setActivationPolicy: NSApplicationActivationPolicyAccessory];
+  [NSAutoreleasePool new];
+  [NSApplication sharedApplication];
+  [NSApp setActivationPolicy:NSApplicationActivationPolicyAccessory];
 
-	NSRect screenFrame = [[NSScreen mainScreen] visibleFrame];
-	CGFloat y = screenFrame.origin.y;
-	if (!display_bottom) {
-		y += screenFrame.size.height - window_height;
-	}
+  NSRect screenFrame = [[NSScreen mainScreen] visibleFrame];
+  CGFloat y = screenFrame.origin.y;
+  if (!display_bottom) {
+    y += screenFrame.size.height - window_height;
+  }
 
-	NSRect windowRect = NSMakeRect(
-		screenFrame.origin.x,
-		y,
-		screenFrame.size.width,
-		window_height);
-	NSWindow *window = [[[BorderlessWindow alloc] initWithContentRect: windowRect
-			styleMask: NSBorderlessWindowMask
-			backing: NSBackingStoreBuffered
-			defer: NO]
-		autorelease];
-	[window makeKeyAndOrderFront:nil];
-	[NSApp activateIgnoringOtherApps:YES];
+  NSRect windowRect = NSMakeRect(screenFrame.origin.x, y,
+                                 screenFrame.size.width, window_height);
+  NSWindow *window =
+      [[[BorderlessWindow alloc] initWithContentRect:windowRect
+                                           styleMask:NSBorderlessWindowMask
+                                             backing:NSBackingStoreBuffered
+                                               defer:NO] autorelease];
+  [window makeKeyAndOrderFront:nil];
+  [NSApp activateIgnoringOtherApps:YES];
 
-	XmenuMainView *view = [[XmenuMainView alloc]
-		initWithFrame: windowRect
-		items: itemList];
-	[view setWantsLayer: YES];
-	[window setContentView: view];
-	[window makeFirstResponder: view];
-	[NSApp run];
-	[view release];
-	puts(toReturn);
+  XmenuMainView *view =
+      [[XmenuMainView alloc] initWithFrame:windowRect items:itemList];
+  [view setWantsLayer:YES];
+  [window setContentView:view];
+  [window makeFirstResponder:view];
+  [NSApp run];
+  [view release];
+  puts(toReturn);
 
-	return 0;
+  return 0;
 }

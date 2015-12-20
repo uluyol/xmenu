@@ -4,19 +4,21 @@
 #include <stdbool.h>
 
 typedef struct {
-	CGColorRef nbg;
-	CGColorRef nfg;
-	CGColorRef sbg;
-	CGColorRef sfg;
-	CTFontRef font;
-	CGFloat font_siz;
-	CGFloat x;
-	CGFloat h;
-	CGFloat w;
-	bool sel;
+  CGColorRef nbg;
+  CGColorRef nfg;
+  CGColorRef sbg;
+  CGColorRef sfg;
+  CTFontRef font;
+  CGFloat font_siz;
+  CGFloat x;
+  CGFloat h;
+  CGFloat w;
+  bool sel;
 } DrawCtx;
 
-bool drawText(CGContextRef ctx, DrawCtx *drawCtx, CFStringRef itemName, bool sel);
+bool drawText(CGContextRef ctx, DrawCtx *drawCtx, CFStringRef itemName,
+              bool sel);
 void drawInput(CGContextRef ctx, DrawCtx *drawCtx);
 CGColorRef mkColor(char *hex_color);
-CFAttributedStringRef mkAttrString(DrawCtx *drawCtx, CFStringRef str, CGColorRef color);
+CFAttributedStringRef mkAttrString(DrawCtx *drawCtx, CFStringRef str,
+                                   CGColorRef color);
