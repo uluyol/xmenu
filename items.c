@@ -23,9 +23,8 @@ void ItemListFilter(ItemList *dest, ItemList src, CFStringRef substr) {
   for (int i = 0; i < src.len; i++) {
     Item *cur = src.item + i;
     if (!alwaysAdd) {
-      CFRange r =
-          CFStringFind(cur->text, substr, kCFCompareCaseInsensitive |
-                                              kCFCompareDiacriticInsensitive);
+      CFRange r = CFStringFind(cur->text, substr,
+                               kCFCompareCaseInsensitive | kCFCompareDiacriticInsensitive);
       if (r.location == kCFNotFound || r.length == 0) {
         continue;
       }

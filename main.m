@@ -30,18 +30,15 @@ int main(int argc, const char **argv) {
     y += screenFrame.size.height - window_height;
   }
 
-  NSRect windowRect = NSMakeRect(screenFrame.origin.x, y,
-                                 screenFrame.size.width, window_height);
-  NSWindow *window =
-      [[[BorderlessWindow alloc] initWithContentRect:windowRect
-                                           styleMask:NSBorderlessWindowMask
-                                             backing:NSBackingStoreBuffered
-                                               defer:NO] autorelease];
+  NSRect windowRect = NSMakeRect(screenFrame.origin.x, y, screenFrame.size.width, window_height);
+  NSWindow *window = [[[BorderlessWindow alloc] initWithContentRect:windowRect
+                                                          styleMask:NSBorderlessWindowMask
+                                                            backing:NSBackingStoreBuffered
+                                                              defer:NO] autorelease];
   [window makeKeyAndOrderFront:nil];
   [NSApp activateIgnoringOtherApps:YES];
 
-  XmenuMainView *view =
-      [[XmenuMainView alloc] initWithFrame:windowRect items:itemList];
+  XmenuMainView *view = [[XmenuMainView alloc] initWithFrame:windowRect items:itemList];
   [view setWantsLayer:YES];
   [window setContentView:view];
   [window makeFirstResponder:view];

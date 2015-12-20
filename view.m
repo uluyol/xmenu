@@ -61,9 +61,7 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
   switch ([event keyCode]) {
     case 51:  // backspace
       if (ps_ != NULL) {
-        CFStringDelete(
-            curText_,
-            CFRangeMake(ps_->idx, CFStringGetLength(curText_) - ps_->idx));
+        CFStringDelete(curText_, CFRangeMake(ps_->idx, CFStringGetLength(curText_) - ps_->idx));
         ps_ = PrevStackPop(ps_);
         ItemListReset(&filtered_);
         ItemListFilter(&filtered_, items_, curText_);
@@ -72,13 +70,9 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
       break;
     case 53:  // escape
       curString = (NSString *)curText_;
-      NSUInteger bufsiz =
-          [curString maximumLengthOfBytesUsingEncoding:NSUTF8StringEncoding] +
-          1;
+      NSUInteger bufsiz = [curString maximumLengthOfBytesUsingEncoding:NSUTF8StringEncoding] + 1;
       char *s = ecalloc(bufsiz, sizeof(char));
-      BOOL success = [curString getCString:s
-                                 maxLength:bufsiz
-                                  encoding:NSUTF8StringEncoding];
+      BOOL success = [curString getCString:s maxLength:bufsiz encoding:NSUTF8StringEncoding];
       if (!success) {
         NSLog(@"unable to write return string");
       }
@@ -113,12 +107,9 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
   [[NSColor colorWithCGColor:drawCtx.nbg] set];
   NSRectFill(rect);
 
-  CFStringRef promptStr =
-      CFStringCreateWithCString(NULL, pad(promptCStr), kCFStringEncodingUTF8);
-  CFStringRef psFont =
-      CFStringCreateWithCString(NULL, "Consolas", kCFStringEncodingUTF8);
-  CTFontDescriptorRef fontDesc =
-      CTFontDescriptorCreateWithNameAndSize(psFont, drawCtx.font_siz);
+  CFStringRef promptStr = CFStringCreateWithCString(NULL, pad(promptCStr), kCFStringEncodingUTF8);
+  CFStringRef psFont = CFStringCreateWithCString(NULL, "Consolas", kCFStringEncodingUTF8);
+  CTFontDescriptorRef fontDesc = CTFontDescriptorCreateWithNameAndSize(psFont, drawCtx.font_siz);
   CTFontRef font = CTFontCreateWithFontDescriptor(fontDesc, 0.0, NULL);
   CFRelease(psFont);
   drawCtx.font = font;

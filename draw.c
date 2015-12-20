@@ -3,8 +3,7 @@
 
 #define INPUT_SPACE_FRACTION 0.3
 
-bool drawText(CGContextRef ctx, DrawCtx *drawCtx, CFStringRef itemName,
-              bool sel) {
+bool drawText(CGContextRef ctx, DrawCtx *drawCtx, CFStringRef itemName, bool sel) {
   CGColorRef fg, bg;
   if (sel) {
     fg = drawCtx->sfg;
@@ -41,10 +40,10 @@ static TextGraphic space;
 static TextGraphic dots;
 
 void initDraw() {
-  space.str = CFStringCreateWithCStringNoCopy(
-      kCFAllocatorDefault, " ", kCFStringEncodingASCII, kCFAllocatorNull);
-  dots.str = CFStringCreateWithCStringNoCopy(
-      kCFAllocatorDefault, "...", kCFStringEncodingASCII, kCFAllocatorNull);
+  space.str = CFStringCreateWithCStringNoCopy(kCFAllocatorDefault, " ", kCFStringEncodingASCII,
+                                              kCFAllocatorNull);
+  dots.str = CFStringCreateWithCStringNoCopy(kCFAllocatorDefault, "...", kCFStringEncodingASCII,
+                                             kCFAllocatorNull);
 
   space.attrStr = NULL;
   space.line = NULL;
@@ -74,8 +73,7 @@ void drawInput(CGContextRef ctx, DrawCtx *drawCtx, CFStringRef input) {
   CTLineRef line = CTLineCreateWithAttributedString(attrInput);
   CGFloat w = CTLineGetTypographicBounds(line, NULL, NULL, NULL);
   CGContextSetFillColorWithColor(ctx, bg);
-  CGContextFillRect(ctx,
-                    CGRectMake(drawCtx->x, 0, w + 2 * space.w, drawCtx->h));
+  CGContextFillRect(ctx, CGRectMake(drawCtx->x, 0, w + 2 * space.w, drawCtx->h));
   CGFloat y = (drawCtx->h - drawCtx->font_siz) / 2;
   CGContextSetTextPosition(ctx, drawCtx->x + space.w, y);
   CTLineDraw(line, ctx);
@@ -94,14 +92,13 @@ end:
   drawCtx->x += inputW;
 }
 
-CFAttributedStringRef mkAttrString(DrawCtx *drawCtx, CFStringRef str,
-                                   CGColorRef color) {
+CFAttributedStringRef mkAttrString(DrawCtx *drawCtx, CFStringRef str, CGColorRef color) {
   CFStringRef keys[] = {kCTFontAttributeName, kCTForegroundColorAttributeName};
   CFTypeRef values[] = {drawCtx->font, color};
-  CFDictionaryRef attrs = CFDictionaryCreate(
-      kCFAllocatorDefault, (const void **)&keys, (const void **)&values,
-      sizeof keys / sizeof(CFStringRef), &kCFTypeDictionaryKeyCallBacks,
-      &kCFTypeDictionaryValueCallBacks);
+  CFDictionaryRef attrs =
+      CFDictionaryCreate(kCFAllocatorDefault, (const void **)&keys, (const void **)&values,
+                         sizeof keys / sizeof(CFStringRef), &kCFTypeDictionaryKeyCallBacks,
+                         &kCFTypeDictionaryValueCallBacks);
   return CFAttributedStringCreate(kCFAllocatorDefault, str, attrs);
 }
 
