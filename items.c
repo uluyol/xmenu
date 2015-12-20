@@ -13,6 +13,8 @@ Item *newItem(ItemList *list) {
   }
   item = list->item + list->len;
   (list->len)++;
+  item->text = NULL;
+  item->sel = FALSE;
   return item;
 }
 
@@ -28,6 +30,8 @@ void ItemListFilter(ItemList *dest, ItemList *src, CFStringRef substr) {
     newItem(dest)->text = cur->text;
   }
 }
+
+void ItemListReset(ItemList *l) { l->len = 0; }
 
 ItemList ReadStdin(void) {
   ItemList list;
