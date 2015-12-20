@@ -5,7 +5,6 @@
 
 Item *newItem(ItemList *list) {
   Item *item;
-  /* We never free anything so pos should never loop. */
   if (list->len == list->cap) {
     list->cap += sizeof(Item) * BUFSIZ;
     if (!(list->item = realloc(list->item, list->cap))) {
@@ -16,6 +15,8 @@ Item *newItem(ItemList *list) {
   (list->len)++;
   return item;
 }
+
+ItemList *ItemListFilter(ItemList *list) {}
 
 ItemList ReadStdin(void) {
   ItemList list;

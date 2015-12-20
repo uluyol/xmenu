@@ -21,7 +21,7 @@ PrevStack *PrevStackPop(PrevStack *ps) {
 }
 
 PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
-  PrevStack *ns = malloc(sizeof(PrevStack *));
+  PrevStack *ns = ecalloc(1, sizeof(PrevStack *));
   ns->prev = ps;
   ns->idx = idx;
   return ns;
@@ -68,7 +68,7 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
       NSUInteger bufsiz =
           [curString maximumLengthOfBytesUsingEncoding:NSUTF8StringEncoding] +
           1;
-      char *s = calloc(bufsiz, sizeof(char));
+      char *s = ecalloc(bufsiz, sizeof(char));
       BOOL success = [curString getCString:s
                                  maxLength:bufsiz
                                   encoding:NSUTF8StringEncoding];
