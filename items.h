@@ -18,3 +18,6 @@ ItemList ReadStdin(void);
 void ItemListFilter(ItemList *dest, ItemList src, CFStringRef substr);
 void ItemListReset(ItemList *l);
 void ItemListFrom(ItemList *dest, ItemList src);
+
+// Sets the new selected item to next and returns it.
+Item *ItemListSetSelected(ItemList *l, Item *cur, Item *next);

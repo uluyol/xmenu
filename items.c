@@ -42,6 +42,16 @@ void ItemListFrom(ItemList *dest, ItemList src) {
   memcpy(dest->item, src.item, sizeof(Item) * src.len);
 }
 
+Item *ItemListSetSelected(ItemList *l, Item *cur, Item *next) {
+  if (cur != NULL && l->item <= cur && cur < l->item + l->len) {
+    cur->sel = FALSE;
+  }
+  if (next != NULL && l->item <= next && next < l->item + l->len) {
+    next->sel = TRUE;
+  }
+  return next;
+}
+
 ItemList ReadStdin(void) {
   ItemList list;
   list.item = NULL;

@@ -63,6 +63,34 @@ extern char *toReturn;
         ItemListFilter(&filtered_, items_, curText_);
         self.needsDisplay = YES;
         break;
+      case 0:  // Ctrl+A
+        if (filtered_.len != 0) {
+          selected_ = ItemListSetSelected(&filtered_, selected_, filtered_.item);
+          self.needsDisplay = YES;
+        }
+        break;
+      case 14:  // Ctrl+E
+        if (filtered_.len != 0) {
+          selected_ =
+              ItemListSetSelected(&filtered_, selected_, filtered_.item + filtered_.len - 1);
+          self.needsDisplay = YES;
+        }
+        break;
+      case 4:  // Ctrl+H
+        if (CFStringGetLength(curText_) != 0) {
+          CFStringDelete(curText_, CFStringGetRangeOfComposedCharactersAtIndex(
+                                       curText_, CFStringGetLength(curText_) - 1));
+          ItemListReset(&filtered_);
+          ItemListFilter(&filtered_, items_, curText_);
+          if (filtered_.len != 0) {
+            filtered_.item[0].sel = TRUE;
+            selected_ = filtered_.item;
+          } else {
+            selected_ = NULL;
+          }
+          self.needsDisplay = YES;
+        }
+        break;
     }
     return;
   }
