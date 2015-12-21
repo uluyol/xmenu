@@ -52,9 +52,9 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
   self = [super initWithFrame:frame];
   drawCtx_ = drawCtx;
   itemList.item[0].sel = TRUE;
-  selected_ = itemList.item;
   items_ = itemList;
   ItemListFrom(&(filtered_), itemList);
+  selected_ = filtered_.item;
   curText_ = CFStringCreateMutable(kCFAllocatorDefault, 0);
   promptStr_ = promptStr;
   return self;
@@ -65,6 +65,7 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
 }
 
 - (void)keyDown:(NSEvent *)event {
+  Item *newSel = selected_ + 1;
   NSString *curString;
   NSUInteger bufsiz;
   BOOL success;
@@ -104,11 +105,20 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
       toReturn = NULL;
       [NSApp stop:self];
       break;
-    case 126:
-    case 125:
-    case 124:
-    case 123:
-      NSLog(@"Arrow key pressed!");
+    case 126:  // up arrow
+    case 123:  // left arrow
+      newSel = selected_ - 1;
+    case 125:  // down arrow
+    case 124:  // right arrow
+      if (selected_ == NULL) {
+        break;
+      }
+      if (filtered_.item <= newSel && newSel < filtered_.item + filtered_.len) {
+        selected_->sel = FALSE;
+        selected_ = newSel;
+        selected_->sel = TRUE;
+      }
+      self.needsDisplay = YES;
       break;
     case 36:  // return/enter
       if (selected_ == NULL) {
@@ -156,15 +166,11 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
   drawInput(ctx, drawCtx_, curText_);
   // TODO: Fix drawing so that the currently selected item is always
   //       visible.
-  if (filtered_.len != 0) {
-    for (int i = 0; i < filtered_.len; i++) {
-      Item *ip = filtered_.item + i;
-      if (!drawText(ctx, drawCtx_, ip->text, ip->sel)) {
-        break;
-      }
+  for (int i = 0; i < filtered_.len; i++) {
+    Item *ip = filtered_.item + i;
+    if (!drawText(ctx, drawCtx_, ip->text, ip->sel)) {
+      break;
     }
-  } else {
-    drawText(ctx, drawCtx_, curText_, TRUE);
   }
 }
 
