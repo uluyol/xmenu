@@ -15,4 +15,6 @@
 @end
 
 @interface BorderlessWindow : NSWindow
+- (void)setupWindowForEvents;
+- (void)windowDidResignKey:(NSNotification *)note;
 @end

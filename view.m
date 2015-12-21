@@ -205,8 +205,25 @@ post_keycode:
 - (BOOL)canBecomeKeyWindow {
   return YES;
 }
+
 - (BOOL)canBecomeMainWindow {
   return YES;
+}
+
+- (void)setupWindowForEvents {
+  [[NSNotificationCenter defaultCenter] addObserver:self
+                                           selector:@selector(windowDidResignKey:)
+                                               name:NSWindowDidResignMainNotification
+                                             object:self];
+  [[NSNotificationCenter defaultCenter] addObserver:self
+                                           selector:@selector(windowDidResignKey:)
+                                               name:NSWindowDidResignKeyNotification
+                                             object:self];
+}
+
+- (void)windowDidResignKey:(NSNotification *)note {
+  toReturn = NULL;
+  [NSApp stop:self];
 }
 
 @end

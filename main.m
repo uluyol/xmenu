@@ -47,10 +47,10 @@ int main(int argc, const char **argv) {
   }
 
   NSRect windowRect = NSMakeRect(screenFrame.origin.x, y, screenFrame.size.width, window_height);
-  NSWindow *window = [[[BorderlessWindow alloc] initWithContentRect:windowRect
-                                                          styleMask:NSBorderlessWindowMask
-                                                            backing:NSBackingStoreBuffered
-                                                              defer:NO] autorelease];
+  BorderlessWindow *window = [[[BorderlessWindow alloc] initWithContentRect:windowRect
+                                                                  styleMask:NSBorderlessWindowMask
+                                                                    backing:NSBackingStoreBuffered
+                                                                      defer:NO] autorelease];
   [window makeKeyAndOrderFront:nil];
   [NSApp activateIgnoringOtherApps:YES];
 
@@ -61,6 +61,7 @@ int main(int argc, const char **argv) {
   [view setWantsLayer:YES];
   [window setContentView:view];
   [window makeFirstResponder:view];
+  [window setupWindowForEvents];
   [NSApp run];
   [view release];
   if (toReturn != NULL) {
