@@ -92,7 +92,7 @@ void parseargs(int argc, const char **argv) {
       selbgcolor = argv[++i];
     } else if (!strcmp(argv[i], "-sf")) { /* selected foreground color */
       selfgcolor = argv[++i];
-    } else if (!strcmp(argv[i], "-h")) { /* bar height */
+    } else if (!strcmp(argv[i], "-H")) { /* bar height */
       window_height = atof(argv[++i]);
     } else {
       usage();
@@ -103,7 +103,7 @@ void parseargs(int argc, const char **argv) {
 void usage(void) {
   fputs(
       "usage: xmenu [-b] [-i] [-p prompt] [-fn font][-nb color] [-nf color]\n"
-      "             [-sb color] [-sf color] [-v]\n",
+      "             [-sb color] [-sf color] [-H height] [-v]\n",
       stderr);
   exit(1);
 }
