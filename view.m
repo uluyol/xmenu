@@ -8,30 +8,12 @@
 
 extern char *toReturn;
 
-PrevStack *PrevStackPop(PrevStack *ps) {
-  if (ps == NULL) {
-    NSLog(@"PrevStackPop: got null");
-    return ps;
-  }
-  PrevStack *ret = ps->prev;
-  free(ps);
-  return ret;
-}
-
-PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
-  PrevStack *ns = ecalloc(1, sizeof(PrevStack *));
-  ns->prev = ps;
-  ns->idx = idx;
-  return ns;
-}
-
 @implementation XmenuMainView {
   DrawCtx *drawCtx_;
   ItemList items_;
   ItemList filtered_;
   Item *selected_;
   CFMutableStringRef curText_;
-  PrevStack *ps_;
   CFStringRef promptStr_;
 }
 
@@ -87,9 +69,9 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
 
   switch ([event keyCode]) {
     case 51:  // backspace
-      if (ps_ != NULL) {
-        CFStringDelete(curText_, CFRangeMake(ps_->idx, CFStringGetLength(curText_) - ps_->idx));
-        ps_ = PrevStackPop(ps_);
+      if (CFStringGetLength(curText_) != 0) {
+        CFStringDelete(curText_, CFStringGetRangeOfComposedCharactersAtIndex(
+                                     curText_, CFStringGetLength(curText_) - 1));
         ItemListReset(&filtered_);
         ItemListFilter(&filtered_, items_, curText_);
         if (filtered_.len != 0) {
@@ -143,7 +125,6 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
       }
     default:
       NSLog(@"Key pressed: %@", event);
-      ps_ = PrevStackPush(ps_, CFStringGetLength(curText_));
       CFStringAppend(curText_, (CFStringRef)event.characters);
       ItemListReset(&filtered_);
       ItemListFilter(&filtered_, items_, curText_);

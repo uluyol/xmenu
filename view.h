@@ -4,11 +4,6 @@
 
 #include "items.h"
 
-typedef struct _PrevStack {
-  CFIndex idx;
-  struct _PrevStack *prev;
-} PrevStack;
-
 @interface XmenuMainView : NSView
 
 - (id)initWithFrame:(NSRect)frame
