@@ -51,6 +51,7 @@ extern char *toReturn;
   NSString *curString;
   NSUInteger bufsiz;
   BOOL success;
+  BOOL curTextChanged = NO;
   char *s;
   NSEventModifierFlags flags = [event modifierFlags] & NSDeviceIndependentModifierFlagsMask;
   if (flags == NSControlKeyMask) {
@@ -65,16 +66,12 @@ extern char *toReturn;
             CFStringDelete(curText_, CFRangeMake(spaceRange.location, CFStringGetLength(curText_) -
                                                                           spaceRange.location));
           }
-          ItemListReset(&filtered_);
-          ItemListFilter(&filtered_, items_, curText_);
-          self.needsDisplay = YES;
+          curTextChanged = YES;
         }
         break;
       case 32:  // Ctrl+U
         CFStringReplaceAll(curText_, CFSTR(""));
-        ItemListReset(&filtered_);
-        ItemListFilter(&filtered_, items_, curText_);
-        self.needsDisplay = YES;
+        curTextChanged = YES;
         break;
       case 0:  // Ctrl+A
         if (filtered_.len != 0) {
@@ -93,19 +90,11 @@ extern char *toReturn;
         if (CFStringGetLength(curText_) != 0) {
           CFStringDelete(curText_, CFStringGetRangeOfComposedCharactersAtIndex(
                                        curText_, CFStringGetLength(curText_) - 1));
-          ItemListReset(&filtered_);
-          ItemListFilter(&filtered_, items_, curText_);
-          if (filtered_.len != 0) {
-            filtered_.item[0].sel = TRUE;
-            selected_ = filtered_.item;
-          } else {
-            selected_ = NULL;
-          }
-          self.needsDisplay = YES;
+          curTextChanged = YES;
         }
         break;
     }
-    return;
+    goto post_keycode;
   }
 
   switch ([event keyCode]) {
@@ -113,15 +102,7 @@ extern char *toReturn;
       if (CFStringGetLength(curText_) != 0) {
         CFStringDelete(curText_, CFStringGetRangeOfComposedCharactersAtIndex(
                                      curText_, CFStringGetLength(curText_) - 1));
-        ItemListReset(&filtered_);
-        ItemListFilter(&filtered_, items_, curText_);
-        if (filtered_.len != 0) {
-          filtered_.item[0].sel = TRUE;
-          selected_ = filtered_.item;
-        } else {
-          selected_ = NULL;
-        }
-        self.needsDisplay = YES;
+        curTextChanged = YES;
       }
       break;
     case 53:  // escape
@@ -161,7 +142,7 @@ extern char *toReturn;
     case 48:  // tab
       if (selected_ != NULL) {
         CFStringReplaceAll(curText_, selected_->text);
-        self.needsDisplay = YES;
+        curTextChanged = YES;
         break;
       }
     default:
@@ -177,6 +158,19 @@ extern char *toReturn;
       }
       self.needsDisplay = YES;
       break;
+  }
+
+post_keycode:
+  if (curTextChanged) {
+    ItemListReset(&filtered_);
+    ItemListFilter(&filtered_, items_, curText_);
+    if (filtered_.len != 0) {
+      filtered_.item[0].sel = TRUE;
+      selected_ = filtered_.item;
+    } else {
+      selected_ = NULL;
+    }
+    self.needsDisplay = YES;
   }
 }
 
