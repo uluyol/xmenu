@@ -50,6 +50,7 @@ extern char *toReturn;
   BOOL curTextChanged = NO;
   char *s;
   NSEventModifierFlags flags = [event modifierFlags] & NSDeviceIndependentModifierFlagsMask;
+
   if (flags == NSControlKeyMask) {
     switch ([event keyCode]) {
       case 13:  // Ctrl+W
@@ -121,7 +122,7 @@ extern char *toReturn;
       self.needsDisplay = YES;
       break;
     case 36:  // return/enter
-      if (selected_ == NULL) {
+      if (selected_ == NULL || flags == NSShiftKeyMask) {
         curString = (NSString *)curText_;
       } else {
         curString = (NSString *)selected_->text;
