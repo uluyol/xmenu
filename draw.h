@@ -20,5 +20,6 @@ void initDraw(DrawCtx *drawCtx);
 
 bool drawText(CGContextRef ctx, DrawCtx *drawCtx, CFStringRef itemName, bool sel);
 void drawInput(CGContextRef ctx, DrawCtx *drawCtx, CFStringRef input);
+void clearRight(CGContextRef ctx, DrawCtx *drawCtx);
 CGColorRef mkColor(char *hex_color);
 CFAttributedStringRef mkAttrString(DrawCtx *drawCtx, CFStringRef str, CGColorRef color);

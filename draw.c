@@ -78,6 +78,11 @@ end:
   drawCtx->x += inputW;
 }
 
+void clearRight(CGContextRef ctx, DrawCtx *drawCtx) {
+  CGContextSetFillColorWithColor(ctx, drawCtx->nbg);
+  CGContextFillRect(ctx, CGRectMake(drawCtx->x, 0, drawCtx->w - drawCtx->x, drawCtx->h));
+}
+
 CFAttributedStringRef mkAttrString(DrawCtx *drawCtx, CFStringRef str, CGColorRef color) {
   CFStringRef keys[] = {kCTFontAttributeName, kCTForegroundColorAttributeName};
   CFTypeRef values[] = {drawCtx->font, color};

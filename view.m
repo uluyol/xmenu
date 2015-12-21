@@ -164,13 +164,21 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
 
   drawText(ctx, drawCtx_, promptStr_, true);
   drawInput(ctx, drawCtx_, curText_);
-  // TODO: Fix drawing so that the currently selected item is always
-  //       visible.
+
+  CGFloat preItemX = drawCtx_->x;
+  bool foundSel = FALSE;
   for (int i = 0; i < filtered_.len; i++) {
     Item *ip = filtered_.item + i;
     if (!drawText(ctx, drawCtx_, ip->text, ip->sel)) {
-      break;
+      if (foundSel) {
+        break;
+      } else {
+        drawCtx_->x = preItemX;
+        clearRight(ctx, drawCtx_);
+        i--;
+      }
     }
+    foundSel = foundSel || ip->sel;
   }
 }
 
