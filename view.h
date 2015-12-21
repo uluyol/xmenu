@@ -10,7 +10,6 @@
               items:(ItemList)itemList
             drawCtx:(DrawCtx *)drawCtx
           promptStr:(CFStringRef)promptStr;
-- (void)keyUp:(NSEvent *)event;
 - (void)keyDown:(NSEvent *)event;
 
 @end

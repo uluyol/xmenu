@@ -42,10 +42,6 @@ extern char *toReturn;
   return self;
 }
 
-- (void)keyUp:(NSEvent *)event {
-  NSLog(@"Key released: %@", event);
-}
-
 - (void)keyDown:(NSEvent *)event {
   Item *newSel = selected_ + 1;
   NSString *curString;
@@ -146,7 +142,6 @@ extern char *toReturn;
         break;
       }
     default:
-      NSLog(@"Key pressed: %@", event);
       CFStringAppend(curText_, (CFStringRef)event.characters);
       ItemListReset(&filtered_);
       ItemListFilter(&filtered_, items_, curText_);
