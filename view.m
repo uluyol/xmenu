@@ -135,7 +135,12 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
       toReturn = s;
       [NSApp stop:self];
       break;
-    case 9:  // tab
+    case 48:  // tab
+      if (selected_ != NULL) {
+        CFStringReplaceAll(curText_, selected_->text);
+        self.needsDisplay = YES;
+        break;
+      }
     default:
       NSLog(@"Key pressed: %@", event);
       ps_ = PrevStackPush(ps_, CFStringGetLength(curText_));
