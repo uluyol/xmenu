@@ -9,11 +9,27 @@
 // TODO: Parse these from command-line opts.
 #define window_height 50
 #define display_bottom true
+#define promptCStr "$"
 
 char *toReturn = "";
 
 int main(int argc, const char **argv) {
-  initDraw();
+  DrawCtx drawCtx;
+  drawCtx.nbg = mkColor("#ffffff");
+  drawCtx.sbg = mkColor("#f00");
+  drawCtx.nfg = mkColor("#0F0");
+  drawCtx.sfg = mkColor("#00f");
+  drawCtx.x = 0;
+  drawCtx.font_siz = 14.0;  // TODO: Fix shadows
+
+  CFStringRef promptStr = CFStringCreateWithCString(NULL, promptCStr, kCFStringEncodingUTF8);
+  CFStringRef fontStr = CFStringCreateWithCString(NULL, "Consolas", kCFStringEncodingUTF8);
+  CTFontDescriptorRef fontDesc = CTFontDescriptorCreateWithNameAndSize(fontStr, drawCtx.font_siz);
+  CTFontRef font = CTFontCreateWithFontDescriptor(fontDesc, 0.0, NULL);
+  CFRelease(fontStr);
+  drawCtx.font = font;
+
+  initDraw(&drawCtx);
 
   ItemList itemList = ReadStdin();
   if (itemList.len) {
@@ -38,7 +54,10 @@ int main(int argc, const char **argv) {
   [window makeKeyAndOrderFront:nil];
   [NSApp activateIgnoringOtherApps:YES];
 
-  XmenuMainView *view = [[XmenuMainView alloc] initWithFrame:windowRect items:itemList];
+  XmenuMainView *view = [[XmenuMainView alloc] initWithFrame:windowRect
+                                                       items:itemList
+                                                     drawCtx:&drawCtx
+                                                   promptStr:promptStr];
   [view setWantsLayer:YES];
   [window setContentView:view];
   [window makeFirstResponder:view];

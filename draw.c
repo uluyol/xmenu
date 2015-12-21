@@ -3,6 +3,27 @@
 
 #define INPUT_SPACE_FRACTION 0.3
 
+typedef struct {
+  CFStringRef str;
+  CFAttributedStringRef attrStr;
+  CTLineRef line;
+  CGFloat w;
+} TextGraphic;
+
+static TextGraphic space;
+static TextGraphic dots;
+
+void initDraw(DrawCtx *drawCtx) {
+  space.str = CFSTR(" ");
+  dots.str = CFSTR("...");
+  space.attrStr = mkAttrString(drawCtx, space.str, drawCtx->nfg);
+  space.line = CTLineCreateWithAttributedString(space.attrStr);
+  space.w = CTLineGetTypographicBounds(space.line, NULL, NULL, NULL);
+  dots.attrStr = mkAttrString(drawCtx, dots.str, drawCtx->nfg);
+  dots.line = CTLineCreateWithAttributedString(dots.attrStr);
+  dots.w = CTLineGetTypographicBounds(dots.line, NULL, NULL, NULL);
+}
+
 bool drawText(CGContextRef ctx, DrawCtx *drawCtx, CFStringRef itemName, bool sel) {
   CGColorRef fg, bg;
   if (sel) {
@@ -15,59 +36,24 @@ bool drawText(CGContextRef ctx, DrawCtx *drawCtx, CFStringRef itemName, bool sel
   CFAttributedStringRef attrItemName = mkAttrString(drawCtx, itemName, fg);
   CTLineRef line = CTLineCreateWithAttributedString(attrItemName);
   CGFloat w = CTLineGetTypographicBounds(line, NULL, NULL, NULL);
-  if ((drawCtx->x + w) > drawCtx->w) {
+  if ((drawCtx->x + w + 2 * space.w) > drawCtx->w) {
     return false;
   }
   CGContextSetFillColorWithColor(ctx, bg);
-  CGContextFillRect(ctx, CGRectMake(drawCtx->x, 0, w, drawCtx->h));
+  CGContextFillRect(ctx, CGRectMake(drawCtx->x, 0, w + 2 * space.w, drawCtx->h));
   CGFloat y = (drawCtx->h - drawCtx->font_siz) / 2;
-  CGContextSetTextPosition(ctx, drawCtx->x, y);
+  CGContextSetTextPosition(ctx, drawCtx->x + space.w, y);
   CTLineDraw(line, ctx);
-  drawCtx->x += w;
+  drawCtx->x += w + 2 * space.w;
   CFRelease(line);
   CFRelease(attrItemName);
   return true;
-}
-
-typedef struct {
-  CFStringRef str;
-  CFAttributedStringRef attrStr;
-  CTLineRef line;
-  CGFloat w;
-} TextGraphic;
-
-static TextGraphic space;
-static TextGraphic dots;
-
-void initDraw() {
-  space.str = CFStringCreateWithCStringNoCopy(kCFAllocatorDefault, " ", kCFStringEncodingASCII,
-                                              kCFAllocatorNull);
-  dots.str = CFStringCreateWithCStringNoCopy(kCFAllocatorDefault, "...", kCFStringEncodingASCII,
-                                             kCFAllocatorNull);
-
-  space.attrStr = NULL;
-  space.line = NULL;
-  space.w = 0;
-  dots.attrStr = NULL;
-  dots.line = NULL;
-  dots.w = 0;
 }
 
 void drawInput(CGContextRef ctx, DrawCtx *drawCtx, CFStringRef input) {
   CGFloat inputW = drawCtx->w * INPUT_SPACE_FRACTION;
   CGColorRef fg = drawCtx->nfg;
   CGColorRef bg = drawCtx->nbg;
-
-  if (space.attrStr == NULL) {
-    space.attrStr = mkAttrString(drawCtx, space.str, fg);
-    space.line = CTLineCreateWithAttributedString(space.attrStr);
-    space.w = CTLineGetTypographicBounds(space.line, NULL, NULL, NULL);
-  }
-  if (dots.attrStr == NULL) {
-    dots.attrStr = mkAttrString(drawCtx, dots.str, fg);
-    dots.line = CTLineCreateWithAttributedString(dots.attrStr);
-    dots.w = CTLineGetTypographicBounds(dots.line, NULL, NULL, NULL);
-  }
 
   CFAttributedStringRef attrInput = mkAttrString(drawCtx, input, fg);
   CTLineRef line = CTLineCreateWithAttributedString(attrInput);

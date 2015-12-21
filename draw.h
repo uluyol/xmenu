@@ -16,7 +16,7 @@ typedef struct {
   bool sel;
 } DrawCtx;
 
-void initDraw();
+void initDraw(DrawCtx *drawCtx);
 
 bool drawText(CGContextRef ctx, DrawCtx *drawCtx, CFStringRef itemName, bool sel);
 void drawInput(CGContextRef ctx, DrawCtx *drawCtx, CFStringRef input);

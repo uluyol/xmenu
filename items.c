@@ -44,6 +44,9 @@ void ItemListFrom(ItemList *dest, ItemList src) {
 
 ItemList ReadStdin(void) {
   ItemList list;
+  list.item = NULL;
+  list.len = 0;
+  list.cap = 0;
   char *buf = NULL;
   size_t cap = 0;
   size_t len;
@@ -54,9 +57,7 @@ ItemList ReadStdin(void) {
       goto end;
     }
     item->sel = false;
-    char *padded = pad(buf);
-    item->text = CFStringCreateWithCString(NULL, padded, kCFStringEncodingUTF8);
-    free(padded);
+    item->text = CFStringCreateWithCString(NULL, buf, kCFStringEncodingUTF8);
   }
 end:
   free(buf);

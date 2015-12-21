@@ -6,8 +6,6 @@
 #include "util.h"
 #include "view.h"
 
-#define promptCStr "$"
-
 extern char *toReturn;
 
 PrevStack *PrevStackPop(PrevStack *ps) {
@@ -28,11 +26,13 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
 }
 
 @implementation XmenuMainView {
+  DrawCtx *drawCtx_;
   ItemList items_;
   ItemList filtered_;
   Item *selected_;
   CFMutableStringRef curText_;
   PrevStack *ps_;
+  CFStringRef promptStr_;
 }
 
 - (BOOL)acceptsFirstResponder {
@@ -45,13 +45,18 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
   return self;
 }
 
-- (id)initWithFrame:(NSRect)frame items:(ItemList)itemList {
+- (id)initWithFrame:(NSRect)frame
+              items:(ItemList)itemList
+            drawCtx:(DrawCtx *)drawCtx
+          promptStr:(CFStringRef)promptStr {
   self = [super initWithFrame:frame];
+  drawCtx_ = drawCtx;
   itemList.item[0].sel = TRUE;
   selected_ = itemList.item;
   items_ = itemList;
   ItemListFrom(&(filtered_), itemList);
   curText_ = CFStringCreateMutable(kCFAllocatorDefault, 0);
+  promptStr_ = promptStr;
   return self;
 }
 
@@ -61,6 +66,21 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
 
 - (void)keyDown:(NSEvent *)event {
   NSString *curString;
+  NSEventModifierFlags flags = [event modifierFlags] & NSDeviceIndependentModifierFlagsMask;
+  if (flags == NSControlKeyMask) {
+    switch ([event keyCode]) {
+      case 13:  // Ctrl+W
+        break;
+      case 32:  // Ctrl+U
+        CFStringReplaceAll(curText_, CFSTR(""));
+        ItemListReset(&filtered_);
+        ItemListFilter(&filtered_, items_, curText_);
+        self.needsDisplay = YES;
+        break;
+    }
+    return;
+  }
+
   switch ([event keyCode]) {
     case 51:  // backspace
       if (ps_ != NULL) {
@@ -112,36 +132,27 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
 }
 
 - (void)drawRect:(NSRect)rect {
-  DrawCtx drawCtx;
-  drawCtx.nbg = mkColor("#ffffff");
-  drawCtx.sbg = mkColor("#f00");
-  drawCtx.nfg = mkColor("#0F0");
-  drawCtx.sfg = mkColor("#00f");
-  drawCtx.x = 0;
-  drawCtx.font_siz = 14.0;  // TODO: Fix shadows
-  [[NSColor colorWithCGColor:drawCtx.nbg] set];
+  [[NSColor colorWithCGColor:drawCtx_->nbg] set];
   NSRectFill(rect);
 
-  CFStringRef promptStr = CFStringCreateWithCString(NULL, pad(promptCStr), kCFStringEncodingUTF8);
-  CFStringRef psFont = CFStringCreateWithCString(NULL, "Consolas", kCFStringEncodingUTF8);
-  CTFontDescriptorRef fontDesc = CTFontDescriptorCreateWithNameAndSize(psFont, drawCtx.font_siz);
-  CTFontRef font = CTFontCreateWithFontDescriptor(fontDesc, 0.0, NULL);
-  CFRelease(psFont);
-  drawCtx.font = font;
-  drawCtx.h = rect.size.height;
-  drawCtx.w = rect.size.width;
-
   CGContextRef ctx = [[NSGraphicsContext currentContext] graphicsPort];
+  drawCtx_->x = 0;
+  drawCtx_->h = rect.size.height;
+  drawCtx_->w = rect.size.width;
 
-  drawText(ctx, &drawCtx, promptStr, true);
-  drawInput(ctx, &drawCtx, curText_);
+  drawText(ctx, drawCtx_, promptStr_, true);
+  drawInput(ctx, drawCtx_, curText_);
   // TODO: Fix drawing so that the currently selected item is always
   //       visible.
-  for (int i = 0; i < filtered_.len; i++) {
-    Item *ip = filtered_.item + i;
-    if (!drawText(ctx, &drawCtx, ip->text, ip->sel)) {
-      break;
+  if (filtered_.len != 0) {
+    for (int i = 0; i < filtered_.len; i++) {
+      Item *ip = filtered_.item + i;
+      if (!drawText(ctx, drawCtx_, ip->text, ip->sel)) {
+        break;
+      }
     }
+  } else {
+    drawText(ctx, drawCtx_, curText_, TRUE);
   }
 }
 
