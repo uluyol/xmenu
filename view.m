@@ -56,6 +56,19 @@ extern char *toReturn;
   if (flags == NSControlKeyMask) {
     switch ([event keyCode]) {
       case 13:  // Ctrl+W
+        if (CFStringGetLength(curText_) != 0) {
+          curString = (NSString *)curText_;
+          NSRange spaceRange = [curString rangeOfString:@" " options:NSBackwardsSearch];
+          if (spaceRange.location == NSNotFound) {
+            CFStringReplaceAll(curText_, CFSTR(""));
+          } else {
+            CFStringDelete(curText_, CFRangeMake(spaceRange.location, CFStringGetLength(curText_) -
+                                                                          spaceRange.location));
+          }
+          ItemListReset(&filtered_);
+          ItemListFilter(&filtered_, items_, curText_);
+          self.needsDisplay = YES;
+        }
         break;
       case 32:  // Ctrl+U
         CFStringReplaceAll(curText_, CFSTR(""));
