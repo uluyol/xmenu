@@ -93,7 +93,7 @@ CFAttributedStringRef mkAttrString(DrawCtx *drawCtx, CFStringRef str, CGColorRef
   return CFAttributedStringCreate(kCFAllocatorDefault, str, attrs);
 }
 
-CGColorRef mkColor(char *hex_color) {
+CGColorRef mkColor(const char *hex_color) {
   if (!hex_color || *hex_color != '#') return NULL;
   hex_color++;
   CGFloat rgba[4];

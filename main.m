@@ -5,20 +5,28 @@
 #include "draw.h"
 #include "view.h"
 #include "items.h"
-
-// TODO: Parse these from command-line opts.
-#define window_height 50
-#define display_bottom true
-#define promptCStr "$"
+#include "util.h"
 
 char *toReturn = "";
 
+bool topbar = true;
+bool caseSensitive;
+float window_height = 14;
+const char *promptCStr = "$";
+const char *font;
+const char *normbgcolor = "#1F1F21";
+const char *normfgcolor = "#F7F7F7";
+const char *selbgcolor = "#34AADC";
+const char *selfgcolor = "#F7F7F7";
+
 int main(int argc, const char **argv) {
+  parseargs(argc, argv);
+
   DrawCtx drawCtx;
-  drawCtx.nbg = mkColor("#ffffff");
-  drawCtx.sbg = mkColor("#f00");
-  drawCtx.nfg = mkColor("#0F0");
-  drawCtx.sfg = mkColor("#00f");
+  drawCtx.nbg = mkColor(normbgcolor);
+  drawCtx.nfg = mkColor(normfgcolor);
+  drawCtx.sbg = mkColor(selbgcolor);
+  drawCtx.sfg = mkColor(selfgcolor);
   drawCtx.x = 0;
   drawCtx.font_siz = 14.0;  // TODO: Fix shadows
 
@@ -42,7 +50,7 @@ int main(int argc, const char **argv) {
 
   NSRect screenFrame = [[NSScreen mainScreen] visibleFrame];
   CGFloat y = screenFrame.origin.y;
-  if (!display_bottom) {
+  if (topbar) {
     y += screenFrame.size.height - window_height;
   }
 

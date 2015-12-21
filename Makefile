@@ -1,6 +1,7 @@
+VERSION = 1.0
 CC ?= clang
 CFLAGS ?= -Wall -O2
-CFLAGS += -fmodules
+CFLAGS += -fmodules -DXMENU_VERSION=\"${VERSION}\"
 OBJS = draw.o items.o main.o util.o view.o
 
 .PHONY: all clean
