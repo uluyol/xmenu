@@ -66,6 +66,9 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
 
 - (void)keyDown:(NSEvent *)event {
   NSString *curString;
+  NSUInteger bufsiz;
+  BOOL success;
+  char *s;
   NSEventModifierFlags flags = [event modifierFlags] & NSDeviceIndependentModifierFlagsMask;
   if (flags == NSControlKeyMask) {
     switch ([event keyCode]) {
@@ -98,14 +101,7 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
       }
       break;
     case 53:  // escape
-      curString = (NSString *)curText_;
-      NSUInteger bufsiz = [curString maximumLengthOfBytesUsingEncoding:NSUTF8StringEncoding] + 1;
-      char *s = ecalloc(bufsiz, sizeof(char));
-      BOOL success = [curString getCString:s maxLength:bufsiz encoding:NSUTF8StringEncoding];
-      if (!success) {
-        NSLog(@"unable to write return string");
-      }
-      toReturn = s;
+      toReturn = NULL;
       [NSApp stop:self];
       break;
     case 126:
@@ -114,6 +110,22 @@ PrevStack *PrevStackPush(PrevStack *ps, CFIndex idx) {
     case 123:
       NSLog(@"Arrow key pressed!");
       break;
+    case 36:  // return/enter
+      if (selected_ == NULL) {
+        curString = (NSString *)curText_;
+      } else {
+        curString = (NSString *)selected_->text;
+      }
+      bufsiz = [curString maximumLengthOfBytesUsingEncoding:NSUTF8StringEncoding] + 1;
+      s = ecalloc(bufsiz, sizeof(char));
+      success = [curString getCString:s maxLength:bufsiz encoding:NSUTF8StringEncoding];
+      if (!success) {
+        NSLog(@"unable to write return string");
+      }
+      toReturn = s;
+      [NSApp stop:self];
+      break;
+    case 9:  // tab
     default:
       NSLog(@"Key pressed: %@", event);
       ps_ = PrevStackPush(ps_, CFStringGetLength(curText_));

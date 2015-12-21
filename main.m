@@ -63,7 +63,9 @@ int main(int argc, const char **argv) {
   [window makeFirstResponder:view];
   [NSApp run];
   [view release];
-  puts(toReturn);
+  if (toReturn != NULL) {
+    puts(toReturn);
+  }
 
   return 0;
 }
