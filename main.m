@@ -40,9 +40,10 @@ int main(int argc, const char **argv) {
   initDraw(&drawCtx);
 
   ItemList itemList = ReadStdin();
-  if (itemList.len) {
-    itemList.item[0].sel = true;
+  if (!itemList.len) {
+    return 1;
   }
+  itemList.item[0].sel = true;
 
   [NSAutoreleasePool new];
   [NSApplication sharedApplication];
