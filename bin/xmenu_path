@@ -34,7 +34,8 @@
 
 cachedir=${XDG_CACHE_HOME:-"$HOME/.cache"}
 if [ -d "$cachedir" ]; then
-	cache=$cachedir/xmenu_run
+	mkdir -p "$cachedir/xmenu" &>/dev/null
+	cache=$cachedir/xmenu/run
 else
 	cache=$HOME/.xmenu_cache # if no xdg dir, fall back to dotfile in ~
 fi

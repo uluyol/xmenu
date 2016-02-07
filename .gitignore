@@ -1,2 +1,3 @@
 *.o
-xmenu
+bin/xmenu
+bin/run_hist

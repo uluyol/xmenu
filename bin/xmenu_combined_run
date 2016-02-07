@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+cachedir=${XDG_CACHE_HOME:-"$HOME/.cache"}
+if [ -d "$cachedir" ]; then
+	mkdir -p "$cachedir/xmenu" &>/dev/null
+	cache="$cachedir/xmenu/combined_run_history"
+else
+	cache="$HOME/.xmenu_combined_run_history" # if no xdg dir, fall back to dotfile in ~
+fi
+
+apps=$(xmenu_apps_path)
+
+to_run=$(cat <(echo "$apps") <(xmenu_path) \
+	| run_hist "$cache" \
+	| xmenu "$@" \
+	| update_hist "$cache")
+if [[ -z $to_run ]]; then
+	exit
+fi
+
+if grep "$to_run" <<<"$apps" &>/dev/null; then
+	open -a "$to_run" -n
+else
+	echo "$to_run" | ${SHELL:-"/bin/sh"}
+fi

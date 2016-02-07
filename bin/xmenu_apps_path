@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+cachedir=${XDG_CACHE_HOME:-"$HOME/.cache"}
+if [ -d "$cachedir" ]; then
+	mkdir -p "$cachedir/xmenu" &>/dev/null
+	cache=$cachedir/xmenu/apps
+else
+	cache=$HOME/.xmenu_apps_cache # if no xdg dir, fall back to dotfile in ~
+fi
+
+SEARCH_PATH=(/Applications "$HOME/Applications")
+
+rescan=false
+for p in "${SEARCH_PATH[@]}"; do
+	if ! test "$cache" -nt "$p"; then
+		rescan=true
+		break
+	fi
+done
+
+if [[ $rescan == "false" ]]; then
+	cat "$cache"
+else
+	find "${SEARCH_PATH[@]}" -maxdepth 1 -name '*.app' \
+		| sed 's:.*/\(.*\)\.app:\1:' \
+		| sort -u \
+		| tee "$cache"
+fi
