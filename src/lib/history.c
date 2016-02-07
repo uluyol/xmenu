@@ -45,7 +45,7 @@ static void update(HistSlice *hist, const char *s) {
 
   // Promote position to the highest of that count.
   // This way more recent items show up on top.
-  while (pos > 0 && hist->arr[pos - 1].count >= entry.count) {
+  while (pos > 0 && hist->arr[pos - 1].count <= entry.count) {
     hist->arr[pos] = hist->arr[pos - 1];
     hist->arr[pos - 1] = entry;
     pos--;
