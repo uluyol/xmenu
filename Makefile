@@ -1,7 +1,7 @@
 VERSION = 1.0
 CC ?= clang
 CFLAGS ?= -Wall -O2
-CFLAGS += -fmodules -DXMENU_VERSION=\"${VERSION}\"
+BUILD_FLAGS := -fmodules -DXMENU_VERSION=\"${VERSION}\"
 OBJS = draw.o items.o main.o util.o view.o
 BINS = xmenu xmenu_path xmenu_run
 PREFIX = /usr/local
@@ -21,11 +21,11 @@ all: xmenu
 
 xmenu: $(OBJS)
 	@echo " CC     " xmenu
-	@$(CC) $(CFLAGS) -o xmenu $(OBJS) -framework Cocoa
+	@$(CC) $(CFLAGS) $(BUILD_FLAGS) -o xmenu $(OBJS) -framework Cocoa
 
 .c.o .m.o:
 	@echo " CC     " $<
-	@$(CC) $(CFLAGS) -c $<
+	@$(CC) $(CFLAGS) $(BUILD_FLAGS) -c $<
 
 clean:
 	rm -f $(OBJS) xmenu

@@ -6,8 +6,8 @@
 Item *newItem(ItemList *list) {
   Item *item;
   if (list->len == list->cap) {
-    list->cap += sizeof(Item) * BUFSIZ;
-    if (!(list->item = realloc(list->item, list->cap))) {
+    list->cap += BUFSIZ;
+    if (!(list->item = realloc(list->item, sizeof(Item) * list->cap))) {
       return NULL;
     }
   }
@@ -20,7 +20,7 @@ Item *newItem(ItemList *list) {
 
 void ItemListFilter(ItemList *dest, ItemList src, CFStringRef substr) {
   bool alwaysAdd = CFStringGetLength(substr) == 0;
-  for (int i = 0; i < src.len; i++) {
+  for (size_t i = 0; i < src.len; i++) {
     Item *cur = src.item + i;
     if (!alwaysAdd) {
       CFRange r = CFStringFind(cur->text, substr,
@@ -60,7 +60,7 @@ ItemList ReadStdin(void) {
   char *buf = NULL;
   size_t cap = 0;
   size_t len;
-  while ((len = getline(&buf, &cap, stdin)) != -1) {
+  while ((len = getline(&buf, &cap, stdin)) != (size_t)(-1)) {
     if (len && buf[len - 1] == '\n') buf[len - 1] = '\0';
     Item *item = newItem(&list);
     if (item == NULL) {

@@ -184,7 +184,7 @@ post_keycode:
 
   CGFloat preItemX = drawCtx_->x;
   bool foundSel = FALSE;
-  for (int i = 0; i < filtered_.len; i++) {
+  for (size_t i = 0; i < filtered_.len; i++) {
     Item *ip = filtered_.item + i;
     if (!drawText(ctx, drawCtx_, ip->text, ip->sel)) {
       if (foundSel) {
