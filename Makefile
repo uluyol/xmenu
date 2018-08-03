@@ -10,7 +10,7 @@ OBJS = \
 	src/xmenu/view.o
 HIST_OBJS = src/lib/history.o
 
-BINS = xmenu run_hist update_hist xmenu_path xmenu_run xmenu_apps_path xmenu_combined_run
+BINS = xmenu xpassmenu run_hist update_hist xmenu_path xmenu_run xmenu_apps_path xmenu_combined_run
 PREFIX = /usr/local
 
 .PHONY: all clean install fmt
